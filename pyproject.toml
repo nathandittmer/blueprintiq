@@ -1,0 +1,21 @@
+[project]
+name = "blueprintiq"
+version = "0.1.0"
+description = "Construction drawing title block extraction and symbol classification system"
+authors = [{ name = "Nathan Dittmer" }]
+requires-python = ">=3.11"
+
+dependencies = [
+    "torch",
+    "torchvision",
+    "pillow",
+    "opencv-python",
+    "fastapi",
+    "pydantic",
+    "mlflow",
+    "numpy",
+    "pandas"
+]
+
+[tool.setuptools.packages.find]
+where = ["."]
