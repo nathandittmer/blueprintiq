@@ -1,0 +1,14 @@
+project:
+  name: blueprintiq
+  run_dir: runs
+  seed: 1337
+mlflow:
+  enabled: true
+  tracking_uri: ''
+  experiment_name: blueprintiq-dev
+data_gen:
+  output_dir: data/synth
+  n_samples: 10
+  image_size:
+  - 2200
+  - 1700

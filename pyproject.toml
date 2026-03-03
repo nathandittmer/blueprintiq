@@ -14,7 +14,9 @@ dependencies = [
     "pydantic",
     "mlflow",
     "numpy",
-    "pandas"
+    "pandas",
+    "pyyaml",
+    "typer"
 ]
 
 [tool.setuptools.packages.find]
