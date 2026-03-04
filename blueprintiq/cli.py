@@ -7,6 +7,7 @@ import random
 from dataclasses import dataclass
 from datetime import datetime
 from pathlib import Path
+from blueprintiq.data_gen.generate_sheets import generate_dataset
 
 import numpy as np
 import typer
@@ -98,6 +99,19 @@ def run(config: str = typer.Option("blueprintiq/config/default.yaml", help="Path
             mlflow.log_artifact(str(run_dir / "meta.json"))
 
     typer.echo(f"✅ Run initialized: {run_dir}")
+
+
+@app.command("gen-data")
+def gen_data(config: str = "blueprintiq/config/default.yaml"):
+    cfg = load_yaml(Path(config))
+    dg = cfg.get("data_gen", {})
+    out_dir = Path(dg.get("output_dir", "data/synth_v0"))
+    n = int(dg.get("n_samples", 10))
+    image_size_list = dg.get("image_size", [2200, 1700])
+    image_size = (int(image_size_list[0]), int(image_size_list[1]))
+    seed = int(dg.get("seed", 1337))
+
+    generate_dataset(out_dir=out_dir, n=n, image_size=image_size, seed=seed)
 
 
 if __name__ == "__main__":

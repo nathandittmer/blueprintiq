@@ -1,0 +1,208 @@
+{
+  "info": {
+    "description": "BlueprintIQ synthetic title block dataset",
+    "version": "0.1"
+  },
+  "licenses": [],
+  "categories": [
+    {
+      "id": 1,
+      "name": "title_block",
+      "supercategory": "layout"
+    }
+  ],
+  "images": [
+    {
+      "id": 1,
+      "file_name": "images/sheet_00000.png",
+      "width": 2200,
+      "height": 1700
+    },
+    {
+      "id": 2,
+      "file_name": "images/sheet_00001.png",
+      "width": 2200,
+      "height": 1700
+    },
+    {
+      "id": 3,
+      "file_name": "images/sheet_00002.png",
+      "width": 2200,
+      "height": 1700
+    },
+    {
+      "id": 4,
+      "file_name": "images/sheet_00003.png",
+      "width": 2200,
+      "height": 1700
+    },
+    {
+      "id": 5,
+      "file_name": "images/sheet_00004.png",
+      "width": 2200,
+      "height": 1700
+    },
+    {
+      "id": 6,
+      "file_name": "images/sheet_00005.png",
+      "width": 2200,
+      "height": 1700
+    },
+    {
+      "id": 7,
+      "file_name": "images/sheet_00006.png",
+      "width": 2200,
+      "height": 1700
+    },
+    {
+      "id": 8,
+      "file_name": "images/sheet_00007.png",
+      "width": 2200,
+      "height": 1700
+    },
+    {
+      "id": 9,
+      "file_name": "images/sheet_00008.png",
+      "width": 2200,
+      "height": 1700
+    },
+    {
+      "id": 10,
+      "file_name": "images/sheet_00009.png",
+      "width": 2200,
+      "height": 1700
+    }
+  ],
+  "annotations": [
+    {
+      "id": 1,
+      "image_id": 1,
+      "category_id": 1,
+      "bbox": [
+        1434,
+        1354,
+        726,
+        306
+      ],
+      "area": 222156,
+      "iscrowd": 0
+    },
+    {
+      "id": 2,
+      "image_id": 2,
+      "category_id": 1,
+      "bbox": [
+        1434,
+        1354,
+        726,
+        306
+      ],
+      "area": 222156,
+      "iscrowd": 0
+    },
+    {
+      "id": 3,
+      "image_id": 3,
+      "category_id": 1,
+      "bbox": [
+        1434,
+        1354,
+        726,
+        306
+      ],
+      "area": 222156,
+      "iscrowd": 0
+    },
+    {
+      "id": 4,
+      "image_id": 4,
+      "category_id": 1,
+      "bbox": [
+        1434,
+        1354,
+        726,
+        306
+      ],
+      "area": 222156,
+      "iscrowd": 0
+    },
+    {
+      "id": 5,
+      "image_id": 5,
+      "category_id": 1,
+      "bbox": [
+        1434,
+        1354,
+        726,
+        306
+      ],
+      "area": 222156,
+      "iscrowd": 0
+    },
+    {
+      "id": 6,
+      "image_id": 6,
+      "category_id": 1,
+      "bbox": [
+        1434,
+        1354,
+        726,
+        306
+      ],
+      "area": 222156,
+      "iscrowd": 0
+    },
+    {
+      "id": 7,
+      "image_id": 7,
+      "category_id": 1,
+      "bbox": [
+        1434,
+        1354,
+        726,
+        306
+      ],
+      "area": 222156,
+      "iscrowd": 0
+    },
+    {
+      "id": 8,
+      "image_id": 8,
+      "category_id": 1,
+      "bbox": [
+        1434,
+        1354,
+        726,
+        306
+      ],
+      "area": 222156,
+      "iscrowd": 0
+    },
+    {
+      "id": 9,
+      "image_id": 9,
+      "category_id": 1,
+      "bbox": [
+        1434,
+        1354,
+        726,
+        306
+      ],
+      "area": 222156,
+      "iscrowd": 0
+    },
+    {
+      "id": 10,
+      "image_id": 10,
+      "category_id": 1,
+      "bbox": [
+        1434,
+        1354,
+        726,
+        306
+      ],
+      "area": 222156,
+      "iscrowd": 0
+    }
+  ]
+}
