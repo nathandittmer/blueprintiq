@@ -7,6 +7,9 @@ from typing import Any
 
 from PIL import Image
 
+import torch
+from torchvision import transforms
+
 
 @dataclass(frozen=True)
 class CocoImage:
@@ -37,6 +40,7 @@ class CocoDetectionDataset:
     def __init__(self, root_dir: str, coco_json: str):
         self.root_dir = Path(root_dir)
         self.coco_path = Path(coco_json)
+        self.transform = transforms.ToTensor()
 
         coco = json.loads(self.coco_path.read_text(encoding="utf-8"))
         self.images = [CocoImage(**im) for im in coco["images"]]
@@ -53,19 +57,30 @@ class CocoDetectionDataset:
     def __getitem__(self, idx: int) -> tuple[Image.Image, dict[str, Any]]:
         im = self.images[idx]
         img_path = self.root_dir / im.file_name
+
         image = Image.open(img_path).convert("RGB")
 
         anns = self.ann_by_image.get(im.id, [])
         boxes_xyxy = []
         labels = []
+
         for a in anns:
             x, y, w, h = a.bbox
             boxes_xyxy.append([x, y, x + w, y + h])
             labels.append(a.category_id)
+        
+        image = self.transform(image)
+
+        if len(boxes_xyxy) == 0:
+            boxes = torch.zeros((0, 4), dtype=torch.float32)
+            labels = torch.zeros((0,), dtype=torch.int64)
+        else:
+            boxes = torch.tensor(boxes_xyxy, dtype=torch.float32)
+            labels = torch.tensor(labels, dtype=torch.int64)
 
         target = {
-            "image_id": im.id,
-            "boxes": boxes_xyxy,
+            "image_id": torch.tensor([im.id]),
+            "boxes": boxes,
             "labels": labels,
         }
         return image, target
