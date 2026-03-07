@@ -6,3 +6,6 @@ gen-data:
 
 viz-data:
 	python -m blueprintiq.datasets.viz_coco_sample
+
+test-detector:
+	python -m blueprintiq.models.test_detector
