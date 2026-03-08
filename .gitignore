@@ -1,3 +1,25 @@
+# datasets
+data/
+datasets/
+
+# model artifacts
+runs/
+checkpoints/
+models/
+
+# MLflow
+mlruns/
+
+# python
+__pycache__/
+*.pyc
+*.pyo
+*.pyd
+
+# OS
+.DS_Store
+Thumbs.db
+
 # Byte-compiled / optimized / DLL files
 __pycache__/
 *.py[codz]

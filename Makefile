@@ -9,3 +9,6 @@ viz-data:
 
 test-detector:
 	python -m blueprintiq.models.test_detector
+
+train-detector:
+	python -m blueprintiq.training.train_detector
