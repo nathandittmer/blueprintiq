@@ -18,3 +18,12 @@ data_gen:
   n_samples: 10
   image_size: [2200,1700]
   seed: 1337
+
+training:
+  batch_size: 2
+  learning_rate: 0.005
+  momentum: 0.9
+  weight_decay: 0.005
+  max_steps_per_epoch: 5
+  checkpoint_dir: runs/checkpoints
+  checkpoint_name: detector_v0.pt
