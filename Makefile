@@ -12,3 +12,6 @@ test-detector:
 
 train-detector:
 	python -m blueprintiq.training.train_detector
+
+eval-detector:
+	python -m blueprintiq.training.eval_detector
