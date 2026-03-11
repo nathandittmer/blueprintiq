@@ -15,3 +15,6 @@ train-detector:
 
 eval-detector:
 	python -m blueprintiq.training.eval_detector
+
+viz-predictions:
+	python -m blueprintiq.training.viz_predictions
