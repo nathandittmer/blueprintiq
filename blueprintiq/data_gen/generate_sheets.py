@@ -2,6 +2,7 @@ from __future__ import annotations
 
 import json
 import random
+import numpy as np
 from pathlib import Path
 from typing import Any
 
@@ -42,11 +43,25 @@ def generate_one(
     margin = 40
     draw.rectangle([margin, margin, w - margin, h - margin], outline=(0, 0, 0), width=3)
 
-    # Title block (bottom-right)
-    tb_w, tb_h = int(w * 0.33), int(h * 0.18)
-    tb_x2, tb_y2 = w - margin, h - margin
-    tb_x1, tb_y1 = tb_x2 - tb_w, tb_y2 - tb_h
-    draw.rectangle([tb_x1, tb_y1, tb_x2, tb_y2], outline=(0, 0, 0), width=3)
+    # Simple interior drawing Lines / plan clutter
+    for _ in range(rng.randint(8, 16)):
+        x1 = rng.randint(margin + 50, w - margin - 200)
+        y1 = rng.randint(margin + 50, h - margin - 200)
+        x2 = min(w - margin - 50, x1 + rng.randint(80, 400))
+        y2 = min(h - margin - 50, y1 + rng.randint(0, 250))
+        draw.line([x1, y1, x2, y2], fill=(0, 0, 0), width=rng.randint(1, 3))
+
+    # Title block (bottom-right, but with slight variation)
+    tb_w = int(w * rng.uniform(0.26, 0.36))
+    tb_h = int(h * rng.uniform(0.14, 0.22))
+
+    offset_x = rng.randint(0, 20)
+    offset_y = rng.randint(0, 20)
+
+    tb_x2 = w - margin - offset_x
+    tb_y2 = h - margin - offset_y
+    tb_x1 = tb_x2 - tb_w
+    tb_y1 = tb_y2 - tb_h
 
     # Title block internal lines
     draw.line([tb_x1, tb_y1 + tb_h * 0.35, tb_x2, tb_y1 + tb_h * 0.35], fill=(0, 0, 0), width=2)
@@ -72,6 +87,15 @@ def generate_one(
         "date": date,
         "title_block_bbox": bbox,
     }
+
+    # Light raster noise for realism
+    arr = np.array(img).astype(np.int16)
+    noise = rng.randint(0, 1) # keeps behavior deterministic but often light
+    if noise == 1:
+        arr = arr + np.random.randint(-8, 9, size=arr.shape)
+        arr = np.clip(arr, 0, 255).astype(np.uint8)
+        img = Image.fromarray(arr)
+
     return img, record
 
 
