@@ -27,3 +27,4 @@ training:
   max_steps_per_epoch: 5
   checkpoint_dir: runs/checkpoints
   checkpoint_name: detector_v0.pt
+  num_epochs: 3

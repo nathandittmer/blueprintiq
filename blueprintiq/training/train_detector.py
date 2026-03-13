@@ -44,33 +44,41 @@ def main():
 
     running_loss = 0.0
     step_count = 0
+    total_steps = 0
 
-    for step, (images, targets) in enumerate(loader):
-        images = [img.to(device) for img in images]
-        targets = [
-            {k: v.to(device) if hasattr(v, "to") else v for k, v in t.items()}
-            for t in targets
-        ]
+    for epoch in range(cfg["training"]["num_epochs"]):
+        running_loss = 0.0
+        step_count = 0
 
-        loss_dict = model(images, targets)
-        loss = sum(loss_dict.values())
+        print(f"\n=== epoch {epoch + 1}/{cfg['training']['num_epochs']}===")
 
-        optimizer.zero_grad()
-        loss.backward()
-        optimizer.step()
+        for step, (images, targets) in enumerate(loader):
+            images = [img.to(device) for img in images]
+            targets = [
+                {k: v.to(device) if hasattr(v, "to") else v for k, v in t.items()}
+                for t in targets
+            ]
 
-        loss_value = float(loss.detach().cpu())
-        running_loss +- loss_value
-        step_count += 1
+            loss_dict = model(images, targets)
+            loss = sum(loss_dict.values())
 
-        print(f"step={step} loss={loss_value:.4f}")
+            optimizer.zero_grad()
+            loss.backward()
+            optimizer.step()
 
-        # keep Day 7 intentionally tiny
-        if step + 1 >= cfg["training"]["max_steps_per_epoch"]:
-            break
+            loss_value = float(loss.detach().cpu())
+            running_loss += loss_value
+            step_count += 1
+            total_steps += 1
 
-    avg_loss = running_loss / max(step_count, 1)
-    print(f"average_loss={avg_loss:.4f}")
+            print(f"epoch={epoch+1} step={step} loss={loss_value:.4f}")
+
+            # keep Day 7 intentionally tiny
+            if step + 1 >= cfg["training"]["max_steps_per_epoch"]:
+                break
+
+        avg_loss = running_loss / max(step_count, 1)
+        print(f"epoch={epoch+1} average_loss={avg_loss:.4f}")
 
     out_dir = Path(cfg["training"]["checkpoint_dir"])
     out_dir.mkdir(parents=True, exist_ok=True)
@@ -80,8 +88,8 @@ def main():
         {
             "model_state_dict": model.state_dict(),
             "optimizer_state_dict": optimizer.state_dict(),
-            "avg_loss": avg_loss,
-            "steps": step_count,
+            "total_steps": total_steps,
+            "num_epochs": cfg["training"]["num_epochs"],
         },
         ckpt_path,
     )
