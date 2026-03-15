@@ -18,3 +18,6 @@ eval-detector:
 
 viz-predictions:
 	python -m blueprintiq.training.viz_predictions
+
+predict-sample:
+	python -m blueprintiq.inference.predict --input data/synth_v0/images/sheet_00000.png
