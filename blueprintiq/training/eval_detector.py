@@ -32,8 +32,13 @@ def main():
     model.to(device)
     model.eval()
 
-    n_eval = min(5, len(ds))
+    n_eval = min(cfg["eval"]["n_eval_samples"], len(ds))
+    score_threshold = cfg["eval"]["score_threshold"]
+    match_iou_threshold = cfg["eval"]["match_iou_threshold"]
+
     matches = 0
+    samples_with_pred = 0
+    iou_sum = 0.0
 
     with torch.no_grad():
         for i in range(n_eval):
@@ -48,28 +53,51 @@ def main():
                 print(f"sample={i} no ground truth boxes")
                 continue
 
-            gt_boxes = gt_boxes[0]
+            gt_box = gt_boxes[0]
+
+            filtered = [
+                (box, score)
+                for box, score in zip(pred_boxes, pred_scores)
+                if score >= score_threshold
+            ]
+
+            if filtered:
+                samples_with_pred += 1
 
             best_iou = 0.0
             best_score = 0.0
 
-            for box, score in zip(pred_boxes, pred_scores):
-                if score < 0.5:
-                    continue
+            for box, score in filtered:
                 iou = box_iou_xyxy(box, gt_box)
                 if iou > best_iou:
                     best_iou = iou
                     best_score = score
 
-            if best_iou >= 0.5:
+            iou_sum += best_iou
+
+            matched = best_iou >= match_iou_threshold
+            if matched:
                 matches += 1
 
             print(
-                f"sample={i} best_iou={best_iou:.3f}"
-                f"best_score={best_score:.3f} matched={best_iou >= 0.5}"
+                f"sample={i} "
+                f"n_preds_above_thresh={len(filtered)} "
+                f"best_iou={best_iou:.3f} "
+                f"best_score={best_score:.3f} "
+                f"matched={matched}"
             )
 
-    print(f" matched {matches}/{n_eval} samples at IoU>=0.5")
+    avg_best_iou = iou_sum / max(n_eval, 1)
+    match_rate = matches / max(n_eval, 1)
+    pred_rate = samples_with_pred / max(n_eval, 1)
+
+    print("\n=== Evaluation Summary ===")
+    print(f"score_threshold={score_threshold}")
+    print(f"match_iou_threshold={match_iou_threshold}")
+    print(f"samples_evaluated={n_eval}")
+    print(f"samples_with_prediction={samples_with_pred}/{n_eval} ({pred_rate:.2%})")
+    print(f"matched_samples={matches}/{n_eval} ({match_rate:.2%})")
+    print(f"average_best_iou={avg_best_iou:.4f}")
 
 
 if __name__ == "__main__":

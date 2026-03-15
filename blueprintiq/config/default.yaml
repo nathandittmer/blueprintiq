@@ -28,3 +28,8 @@ training:
   checkpoint_dir: runs/checkpoints
   checkpoint_name: detector_v0.pt
   num_epochs: 3
+
+eval:
+  n_eval_samples: 5
+  score_threshold: 0.2
+  match_iou_threshold: 0.5
