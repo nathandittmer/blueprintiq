@@ -21,3 +21,6 @@ viz-predictions:
 
 predict-sample:
 	python -m blueprintiq.inference.predict --input data/synth_v0/images/sheet_00000.png
+
+serve:
+	python -m uvicorn blueprintiq.service.app:app --reload
