@@ -6,6 +6,7 @@ from PIL import Image
 from torchvision import transforms
 
 from blueprintiq.models.detector import build_title_block_detector
+from blueprintiq.monitoring.logger import log_prediction
 
 
 class ModelService:
@@ -55,8 +56,19 @@ class ModelService:
 
         rounded_box = [round(x, 2) for x in best_box] if best_box else None
 
-        return {
+        result = {
             "image_path": str(path),
             "title_block_bbox": rounded_box,
             "score": round(best_score, 4),
         }
+        
+        log_prediction(
+            {
+                "image_path": str(path),
+                "score_threshold": score_threshold,
+                "title_block_bbox": rounded_box,
+                "score": round(best_score, 4),
+            }
+        )
+
+        return result
