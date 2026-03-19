@@ -24,3 +24,6 @@ predict-sample:
 
 serve:
 	python -m uvicorn blueprintiq.service.app:app --reload
+
+monitor-summary:
+	python -m blueprintiq.monitoring.summarize
