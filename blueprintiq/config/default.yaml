@@ -33,3 +33,7 @@ eval:
   n_eval_samples: 5
   score_threshold: 0.2
   match_iou_threshold: 0.5
+
+model:
+  version: "v0.1"
+  description: "faster_rcnn_title_block_detector"

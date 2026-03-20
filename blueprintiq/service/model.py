@@ -22,6 +22,10 @@ class ModelService:
         self.model.to(self.device)
         self.model.eval()
 
+        self.model_version = ckpt.get("model_version", "unknown")
+        self.model_description = ckpt.get("model_description", "unknown")
+        self.num_epochs = ckpt.get("num_epochs", None)
+
     def _load_yaml(self, path: Path) -> dict:
         with path.open("r", encoding="utf-8") as f:
             return yaml.safe_load(f)
@@ -60,6 +64,9 @@ class ModelService:
             "image_path": str(path),
             "title_block_bbox": rounded_box,
             "score": round(best_score, 4),
+            "model_version": self.model_version,
+            "model_description": self.model_description,
+            "trained_epochs": self.num_epochs,
         }
         
         log_prediction(
@@ -68,6 +75,7 @@ class ModelService:
                 "score_threshold": score_threshold,
                 "title_block_bbox": rounded_box,
                 "score": round(best_score, 4),
+                "model_version": self.model_version,
             }
         )
 

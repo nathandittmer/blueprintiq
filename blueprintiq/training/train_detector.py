@@ -90,6 +90,8 @@ def main():
             "optimizer_state_dict": optimizer.state_dict(),
             "total_steps": total_steps,
             "num_epochs": cfg["training"]["num_epochs"],
+            "model_version": cfg["model"]["version"],
+            "model_description": cfg["model"]["description"],
         },
         ckpt_path,
     )
