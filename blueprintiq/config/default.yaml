@@ -37,3 +37,7 @@ eval:
 model:
   version: "v0.1"
   description: "faster_rcnn_title_block_detector"
+
+inference:
+  score_threshold: 0.2
+  max_predictions: 1

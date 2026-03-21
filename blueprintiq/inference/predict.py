@@ -27,10 +27,16 @@ def load_image_tensor(image_path: Path) -> torch.Tensor:
 def predict(
     input: str = typer.Option(..., "--input", help="Path to input image"),
     config: str = typer.Option("blueprintiq/config/default.yaml", "--config", help="Path to YAML config"),
-    score_threshold: float = typer.Option(0.2, "--score-threshold", help="Minimum score threshold"),
+    score_threshold: float | None = typer.Option(None, "--score-threshold", help="Minimum score threshold"),
 ) -> None:
     cfg = load_yaml(Path(config))
     device = torch.device("cuda" if torch.cuda.is_available() else "cpu")
+
+    effective_score_threshold = (
+        score_threshold
+        if score_threshold is not None
+        else cfg["inference"]["score_threshold"]
+    )
 
     model = build_title_block_detector(num_classes=2)
     ckpt_path = Path(cfg["training"]["checkpoint_dir"]) / cfg["training"]["checkpoint_name"]
@@ -52,7 +58,7 @@ def predict(
     best_score = 0.0
 
     for box, score in zip(boxes, scores):
-        if score < score_threshold:
+        if score < effective_score_threshold:
             continue
         if score > best_score:
             best_box = box
@@ -65,6 +71,7 @@ def predict(
         "image_path": str(image_path),
         "title_block_bbox": rounded_box,
         "score": round(best_score, 4),
+        "score_threshold": effective_score_threshold,
     }
 
     print(json.dumps(result, indent=2))

@@ -13,6 +13,7 @@ class ModelService:
     def __init__(self, config_path: str = "blueprintiq/config/default.yaml"):
         self.cfg = self._load_yaml(Path(config_path))
         self.device = torch.device("cuda" if torch.cuda.is_available() else "cpu")
+        self.default_score_threshold = self.cfg["inference"]["score_threshold"]
 
         self.model = build_title_block_detector(num_classes=2)
         ckpt_path = Path(self.cfg["training"]["checkpoint_dir"]) / self.cfg["training"]["checkpoint_name"]
@@ -34,11 +35,17 @@ class ModelService:
         image = Image.open(image_path).convert("RGB")
         return transforms.ToTensor()(image)
 
-    def predict(self, image_path: str, score_threshold: float = 0.2):
+    def predict(self, image_path: str, score_threshold: float | None = None):
         path = Path(image_path)
 
         if not path.exists():
             raise FileNotFoundError(f"Image not found: {image_path}")
+
+        effective_score_threshold = (
+            score_threshold
+            if score_threshold is not None
+            else self.default_score_threshold
+        )
 
         image_tensor = self._load_image_tensor(path)
 
@@ -52,18 +59,19 @@ class ModelService:
         best_score = 0.0
 
         for box, score in zip(boxes, scores):
-            if score < score_threshold:
+            if score < effective_score_threshold:
                 continue
             if score > best_score:
                 best_box = box
                 best_score = score
 
         rounded_box = [round(x, 2) for x in best_box] if best_box else None
-
+        
         result = {
             "image_path": str(path),
             "title_block_bbox": rounded_box,
             "score": round(best_score, 4),
+            "score_threshold": effective_score_threshold,
             "model_version": self.model_version,
             "model_description": self.model_description,
             "trained_epochs": self.num_epochs,
@@ -72,7 +80,7 @@ class ModelService:
         log_prediction(
             {
                 "image_path": str(path),
-                "score_threshold": score_threshold,
+                "score_threshold": effective_score_threshold,
                 "title_block_bbox": rounded_box,
                 "score": round(best_score, 4),
                 "model_version": self.model_version,
