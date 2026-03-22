@@ -27,3 +27,6 @@ serve:
 
 monitor-summary:
 	python -m blueprintiq.monitoring.summarize
+
+batch-predict:
+	python -m blueprintiq.inference.batch_predict --input-dir data/synth_v0/images
