@@ -4,6 +4,7 @@ from pathlib import Path
 
 import torch
 import yaml
+import json
 
 from blueprintiq.datasets.coco_detection_dataset import CocoDetectionDataset
 from blueprintiq.models.detector import build_title_block_detector
@@ -91,6 +92,20 @@ def main():
     match_rate = matches / max(n_eval, 1)
     pred_rate = samples_with_pred / max(n_eval, 1)
 
+    summary = {
+        "score_threshold": score_threshold,
+        "match_iou_threshold": match_iou_threshold,
+        "samples_evaluated": n_eval,
+        "samples_with_prediction": samples_with_pred,
+        "prediction_rate": pred_rate,
+        "matched_samples": matches,
+        "match_rate": match_rate,
+        "average_best_iou": avg_best_iou,
+        "model_version": ckpt.get("model_version", "unknown"),
+        "model_description": ckpt.get("model_description", "unknown"),
+        "trained_epochs": ckpt.get("num_epochs", None),
+    }
+
     print("\n=== Evaluation Summary ===")
     print(f"score_threshold={score_threshold}")
     print(f"match_iou_threshold={match_iou_threshold}")
@@ -98,6 +113,14 @@ def main():
     print(f"samples_with_prediction={samples_with_pred}/{n_eval} ({pred_rate:.2%})")
     print(f"matched_samples={matches}/{n_eval} ({match_rate:.2%})")
     print(f"average_best_iou={avg_best_iou:.4f}")
+
+    out_dir = Path("runs/eval")
+    out_dir.mkdir(parents=True, exist_ok=True)
+
+    out_path = out_dir / "eval_report.json"
+    out_path.write_text(json.dumps(summary, indent=2), encoding="utf-8")
+
+    print(f"Wrote evaluation report to {out_path}")
 
 
 if __name__ == "__main__":
