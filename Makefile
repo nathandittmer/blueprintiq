@@ -30,3 +30,9 @@ monitor-summary:
 
 batch-predict:
 	python -m blueprintiq.inference.batch_predict --input-dir data/synth_v0/images
+
+docker-build:
+	docker build -t blueprintiq-api .
+
+docker-run:
+	docker run -p 8000:8000 blueprintiq-api
