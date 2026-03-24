@@ -1,43 +1,80 @@
 # BlueprintIQ
 
-## Overview
+## Project overview
 
-BlueprintIQ is a production-oriented machine learning system for extracting structured metadata from construction drawings.
+BlueprintIQ is an end-to-end machine learning system for construction drawing understanding, focused on detecting title blocks in blueprint images using PyTorch object detection.
 
-The system detects title blocks in plan sheets and extracts fields such as:
+## Why this project matters
 
-- Sheet Number
-- Project Name
-- Revision
-- Date
-- Discipline
+- Construction and AECO workflows often depend on extracting structured information from drawings.
+- Title block detection is a practical first step toward drawing metadata extraction and document understanding.
+- This project demonstrates the full ML lifecycle from synthetic data generation to model serving and lightweight monitoring.
 
-This project simulates a real AECO (Architecture, Engineering, Construction, Operations) workflow aligned with industrial ML engineering standards.
+## What this project includes
 
-## System Architecture
+- Synthetic blueprint image generation
+- COCO-style labeled detection dataset
+- PyTorch Faster R-CNN title block detector
+- IoU-based evaluation and saved evaluation reports
+- Visualization of predicted vs. ground-truth boxes
+- CLI inference for single-image prediction
+- Batch inference over folders of images
+- FastAPI service for model serving
+- Prediction logging and monitoring summaries
+- Dockerized API packaging
 
-Synthetic Blueprint Generator  
-↓  
-Detection Model (PyTorch)  
-↓  
-Title Block Crop  
-↓  
-OCR + Postprocessing  
-↓  
-Structured JSON Output  
-↓  
-FastAPI Service  
-↓  
-Monitoring + Drift Metrics
+## System architecture
 
-## Design Principles
+Synthetic Data Generator  
+→ COCO Dataset  
+→ PyTorch Dataset Loader  
+→ Faster R-CNN Detector  
+→ Evaluation + Visualization  
+→ CLI / Batch Inference  
+→ FastAPI Service  
+→ Prediction Logging + Monitoring  
+→ Dockerized Deployment
 
-- Reproducible experiments
-- Config-driven pipelines
-- Modular ML architecture
-- Production-style inference service
-- Monitoring-first mindset
+## Tech stack
 
-## Status
+Python, PyTorch, torchvision, FastAPI, Typer, Docker, MLflow, Pillow, OpenCV
 
-**Day 1:** Repository scaffolding complete.
+## How to run
+
+### Train the detector
+
+make train-detector
+
+### Evaluate the detector
+
+make eval-detector
+
+### Visualize predictions
+
+make viz-predictions
+
+### Run single-image inference
+
+python -m blueprintiq.inference.predict --input data/synth_v0/images/sheet_00000.png
+
+### Run batch inference
+
+make batch-predict
+
+### Start the API
+
+make serve
+
+### Build the Docker image
+
+docker build -t blueprintiq-api .
+
+## Example results
+
+On a small synthetic evaluation sample, the detector achieved:
+
+- 100% prediction rate
+- 100% match rate at IoU ≥ 0.5
+- Average best IoU of 0.7343
+
+These results are based on synthetic data and are intended to demonstrate end-to-end ML engineering workflow rather than final production accuracy.
